@@ -14,9 +14,12 @@ class Fighter:
         else:
             self.color = pygame.Color('blue')
         self.speed = 10
-        self.jump = 40
+        self.fighter_height = 150
 
-        self.rect = pygame.Rect(self.x, self.y, 80, 150)
+        self.jump_v = 30
+        self.jumping = False
+
+        self.rect = pygame.Rect(self.x, self.y, 80, self.fighter_height)
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
@@ -30,7 +33,17 @@ class Fighter:
                 self.rect.x -= self.speed
 
     def jump(self):
-        pass
+        g = 2
+        floor_line = 500
+        if self.rect.y + self.fighter_height == floor_line:
+            self.jumping = True
+        if self.jumping:
+            if self.rect.y + self.fighter_height - self.jump_v >= floor_line:
+                self.jumping = False
+                self.jump_v = 30
+            else:
+                self.jump_v -= g
+                self.rect.y -= self.jump_v
 
     def bend_down(self):  # пригнуться
         pass

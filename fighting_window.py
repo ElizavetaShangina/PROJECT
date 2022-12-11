@@ -38,12 +38,16 @@ while running:
             fighter1.move('right')
         elif keys[pygame.K_a]:
             fighter1.move('left')
+    if keys[pygame.K_w]:
+        fighter1.jump()
 
     if not(keys[pygame.K_j] and keys[pygame.K_l]):
         if keys[pygame.K_l]:
             fighter2.move('right')
         elif keys[pygame.K_j]:
             fighter2.move('left')
+    if keys[pygame.K_i]:
+        fighter2.jump()
 
     fighter1.draw(screen)
     fighter2.draw(screen)
