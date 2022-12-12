@@ -13,11 +13,15 @@ class Fighter:
             self.color = pygame.Color('red')
         else:
             self.color = pygame.Color('blue')
-        self.speed = 10
-        self.fighter_height = 150
 
+        self.speed = 10
+
+        self.fighter_height = 150
         self.jump_v = 30
+        self.floor_line = 500
         self.jumping = False
+
+        self.bending_down = False
 
         self.rect = pygame.Rect(self.x, self.y, 80, self.fighter_height)
 
@@ -34,7 +38,6 @@ class Fighter:
 
     def jump(self):
         g = 2
-        floor_line = 500
         keys = pygame.key.get_pressed()
         # проверка кнопок для каждого игрока
         if self.player_numb == 1:
@@ -45,7 +48,7 @@ class Fighter:
                 self.jumping = True
         # прыжок
         if self.jumping:
-            if self.rect.y + self.fighter_height - self.jump_v >= floor_line:
+            if self.rect.y + self.fighter_height - self.jump_v >= self.floor_line:
                 self.jumping = False
                 self.jump_v = 30
             else:
@@ -53,7 +56,14 @@ class Fighter:
                 self.rect.y -= self.jump_v
 
     def bend_down(self):  # пригнуться
-        pass
+        if self.bending_down:
+            self.rect.height = self.fighter_height // 2
+            self.rect.y = self.y + self.fighter_height // 2
+            self.speed = 5
+        else:
+            self.rect.height = self.fighter_height
+            self.rect.y = self.y
+            self.speed = 10
 
     def attack(self):
         pass

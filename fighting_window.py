@@ -26,18 +26,36 @@ while running:
     clock.tick(fps)
     # Очистка экрана
     screen.blit(scaled_background_image, (0, 0))
+
+    # проверка кнопок
+    keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # проверка кнопок
-    keys = pygame.key.get_pressed()
+        # проверка на нажатие/отжатие клавиш пригибания
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s:
+                fighter1.bending_down = True
+                fighter1.bend_down()
+            elif event.key == pygame.K_k:
+                fighter2.bending_down = True
+                fighter2.bend_down()
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_s:
+                fighter1.bending_down = False
+                fighter1.bend_down()
+            elif event.key == pygame.K_k:
+                fighter2.bending_down = False
+                fighter2.bend_down()
+
     # проверка на две кнопки одновременно
     if not(keys[pygame.K_d] and keys[pygame.K_a]):
         if keys[pygame.K_d]:
             fighter1.move('right')
         elif keys[pygame.K_a]:
             fighter1.move('left')
+
     fighter1.jump()
 
     if not(keys[pygame.K_j] and keys[pygame.K_l]):
