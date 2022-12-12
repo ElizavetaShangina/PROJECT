@@ -35,8 +35,15 @@ class Fighter:
     def jump(self):
         g = 2
         floor_line = 500
-        if self.rect.y + self.fighter_height == floor_line:
-            self.jumping = True
+        keys = pygame.key.get_pressed()
+        # проверка кнопок для каждого игрока
+        if self.player_numb == 1:
+            if keys[pygame.K_w]:
+                self.jumping = True
+        elif self.player_numb == 2:
+            if keys[pygame.K_i]:
+                self.jumping = True
+        # прыжок
         if self.jumping:
             if self.rect.y + self.fighter_height - self.jump_v >= floor_line:
                 self.jumping = False
