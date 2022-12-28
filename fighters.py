@@ -1,8 +1,14 @@
 import pygame
 
 
-class Fighter:
+# конец раунда
+def round_over(winner):
+    print(f'Player {winner} is a winner!')
+
+
+class Fighter(pygame.sprite.Sprite):
     def __init__(self, player_numb, x_pos, y_pos, screen_width, screen_height):
+        super().__init__()
         self.x = x_pos
         self.y = y_pos
         self.screen_width = screen_width
@@ -17,13 +23,17 @@ class Fighter:
         self.speed = 10
 
         self.fighter_height = 150
+        self.fighter_width = 80
+
         self.jump_v = 30
         self.floor_line = 500
         self.jumping = False
 
         self.bending_down = False
 
-        self.rect = pygame.Rect(self.x, self.y, 80, self.fighter_height)
+        self.rect = pygame.Rect(self.x, self.y, self.fighter_width, self.fighter_height)
+
+        self.health = 200
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
@@ -65,5 +75,27 @@ class Fighter:
             self.rect.y = self.y
             self.speed = 10
 
-    def attack(self):
-        pass
+    def attack(self, screen, attack_type, enemy):
+        damage = 0
+        attack_radius = 0
+        if attack_type == 1:
+            attack_radius = 50
+            damage = 2
+        elif attack_type == 2:
+            attack_radius = 70
+            damage = 3
+        elif attack_type == 3:
+            attack_radius = 100
+            damage = 5
+        if self.bending_down:
+            attack_radius = 50
+            damage = 1
+        attack_rect = pygame.Rect(self.rect.right, self.rect.top, attack_radius, self.rect.height)
+
+        if attack_rect.colliderect(enemy.rect):
+            enemy.health -= damage
+
+        if enemy.health <= 0:
+            round_over(self.player_numb)
+
+        pygame.draw.rect(screen, (0, 255, 0), attack_rect)
