@@ -1,5 +1,3 @@
-import pygame.time
-
 from first_window import draw_background, draw_first_window
 from player_names import input_player_names
 from character_selecting_menu import draw_menu
