@@ -10,6 +10,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 characters = ['Dio Brando', 'Sasuke', 'Rycon', 'Aizen Sousuke']
+background_rect, background_width, background_height, background_x1, background_y1 = draw_background()
 
 
 class Hero(pygame.sprite.Sprite):
@@ -41,7 +42,7 @@ class Hero(pygame.sprite.Sprite):
 
 
 for i in range(4):
-    Hero(120 + 480 + i * 200, 415, characters[i])
+    Hero(120 + background_x1 + i * 200, background_y1 + 140, characters[i])
 
 
 def terminate():
