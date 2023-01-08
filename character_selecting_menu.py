@@ -12,7 +12,6 @@ all_sprites = pygame.sprite.Group()
 characters = ['Dio Brando', 'Sasuke', 'Rycon', 'Aizen Sousuke']
 
 
-
 class Hero(pygame.sprite.Sprite):
     def __init__(self, x, y, name):
         super().__init__()
@@ -33,7 +32,7 @@ class Hero(pygame.sprite.Sprite):
                     i = -30
                     for line in file:
                         i += 30
-                        font = pygame.font.Font(None, 30)
+                        font = pygame.font.Font(None, 25)
                         text = font.render(line, True, (255, 255, 255))
                         text_x = self.rect.x + 105
                         text_y = self.rect.y + i
@@ -81,8 +80,8 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
                           useful_card_start_height, card_width, card_height))
         if current_player - 1 == i:
             pygame.draw.rect(screen, pygame.Color(colors[i]),
-                             (start_width + i * card_width - 2,
-                              useful_card_start_height - 2, card_width + 2, card_height + 2), 2)
+                             (start_width + i * card_width - 5,
+                              useful_card_start_height - 5, card_width + 5, card_height + 5), 5)
         font = pygame.font.Font(None, 30)
         text = font.render(button_names[i], True, (255, 255, 255))
         text_w = text.get_width()
@@ -104,8 +103,8 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
         elif player2_character == characters[i]:
             color = 'blue'
         pygame.draw.rect(screen, pygame.Color(color),
-                         (start_width + i * character_card_width - 2, character_card_start_height - 2,
-                          character_card_width + 3, character_card_height + 3), 2)
+                         (start_width + i * character_card_width - 5, character_card_start_height - 5,
+                          character_card_width + 10, character_card_height + 10), 5)
         font = pygame.font.Font(None, 30)
         text = font.render(characters[i], True, (255, 255, 255))
         text_w = text.get_width()
