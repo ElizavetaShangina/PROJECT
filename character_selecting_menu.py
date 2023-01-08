@@ -8,6 +8,41 @@ SCREEN_WIDTH = windll.user32.GetSystemMetrics(0)
 SCREEN_HEIGHT = windll.user32.GetSystemMetrics(1) - 50
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
+all_sprites = pygame.sprite.Group()
+characters = ['Dio Brando', 'Sasuke', 'Rycon', 'Aizen Sousuke']
+
+
+
+class Hero(pygame.sprite.Sprite):
+    def __init__(self, x, y, name):
+        super().__init__()
+        self.name = name
+        image = pygame.image.load(f'project_files\\{name}.jpg')
+        image1 = pygame.transform.scale(image, (100, 150))
+        self.image = image1
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
+        self.already_opened = False
+        all_sprites.add(self)
+
+    def update(self, pos):
+        if not self.already_opened:
+            if self.rect.collidepoint(pos[0], pos[1]):
+                with open(f'project_files\\{self.name}.txt') as f:
+                    file = f.read().split('\n')
+                    i = -30
+                    for line in file:
+                        i += 30
+                        font = pygame.font.Font(None, 30)
+                        text = font.render(line, True, (255, 255, 255))
+                        text_x = self.rect.x + 105
+                        text_y = self.rect.y + i
+                        screen.blit(text, (text_x, text_y))
+                    self.already_opened = True
+
+
+for i in range(4):
+    Hero(120 + 480 + i * 200, 415, characters[i])
 
 
 def terminate():
@@ -62,7 +97,6 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
     character_card_start_width = 120 + background_x1
     character_card_start_height = 140 + background_y1
     start_width = character_card_start_width
-    all_sprites = pygame.sprite.Group()
     for i in range(character_number):
         color = 'black'
         if player1_character == characters[i]:
@@ -72,15 +106,6 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
         pygame.draw.rect(screen, pygame.Color(color),
                          (start_width + i * character_card_width - 2, character_card_start_height - 2,
                           character_card_width + 3, character_card_height + 3), 2)
-        fullname = f'project_files\\{characters[i]}.jpg'
-        sprite = pygame.sprite.Sprite()
-        image = pygame.image.load(fullname)
-        image1 = pygame.transform.scale(image, (character_card_width, character_card_height))
-        sprite.image = image1
-        sprite.rect = sprite.image.get_rect()
-        sprite.rect.x = start_width + i * character_card_width
-        sprite.rect.y = character_card_start_height
-        all_sprites.add(sprite)
         font = pygame.font.Font(None, 30)
         text = font.render(characters[i], True, (255, 255, 255))
         text_w = text.get_width()
@@ -98,6 +123,8 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
+            elif event.type == pygame.MOUSEMOTION:
+                all_sprites.update(event.pos)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 position = list(event.pos)
                 if character_card_start_height <= position[1] <= character_card_start_height + character_card_height:
