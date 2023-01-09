@@ -11,6 +11,9 @@ clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 characters = ['Dio Brando', 'Sasuke', 'Kuchiki Rukia', 'Aizen Sousuke']
 background_rect, background_width, background_height, background_x1, background_y1 = draw_background()
+current_player = -1
+player1_character = ''
+player2_character = ''
 
 
 class Hero(pygame.sprite.Sprite):
@@ -22,6 +25,7 @@ class Hero(pygame.sprite.Sprite):
         self.image = image1
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
+        self.player = 0
         self.already_opened = False
         all_sprites.add(self)
 
@@ -42,6 +46,21 @@ class Hero(pygame.sprite.Sprite):
     def set_already_opened(self):
         self.already_opened = False
 
+    def is_chosen(self, pos, current_player):
+        global player1_character, player2_character
+        if self.rect.collidepoint(pos[0], pos[1]) and self.player == 0 and current_player in [1, 2]:
+            if current_player == 1:
+                player1_character = self.name
+            elif current_player == 2:
+                player2_character = self.name
+            self.player = current_player
+        elif player1_character == self.name:
+            self.player = 1
+        elif player2_character == self.name:
+            self.player = 2
+        else:
+            self.player = 0
+
 
 heroes = []
 for i in range(4):
@@ -53,7 +72,8 @@ def terminate():
     sys.exit()
 
 
-def draw_menu(player1, player2, current_player=-1, player1_character='', player2_character=''):
+def draw_menu(player1, player2, current_player=-1):
+    global player1_character, player2_character
     background_rect, background_width, background_height, background_x1, background_y1 = draw_background()
     all_sprites.draw(screen)
     for i in heroes:
@@ -86,8 +106,8 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
                           useful_card_start_height, card_width, card_height))
         if current_player - 1 == i:
             pygame.draw.rect(screen, pygame.Color(colors[i]),
-                             (start_width + i * card_width - 5,
-                              useful_card_start_height - 5, card_width + 5, card_height + 5), 5)
+                             (start_width + i * card_width,
+                              useful_card_start_height, card_width, card_height), 5)
         font = pygame.font.Font(None, 30)
         text = font.render(button_names[i], True, (255, 255, 255))
         text_w = text.get_width()
@@ -99,22 +119,17 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
     pygame.display.flip()
 
     # Отрисовка карточек персонажей
-    character_card_start_width = 120 + background_x1
     character_card_start_height = 140 + background_y1
     k = 0
+    colors = ['black', 'red', 'blue']
     for i in range(character_number):
-        color = 'black'
-        if player1_character == characters[i]:
-            color = 'red'
-        elif player2_character == characters[i]:
-            color = 'blue'
+        color = colors[heroes[i].player]
         pygame.draw.rect(screen, pygame.Color(color),
                          (30 + background_x1 + i * 225 - 5, character_card_start_height - 5,
                           character_card_width + 10, character_card_height + 10), 5)
         font = pygame.font.Font(None, 30)
         text = font.render(characters[i], True, (255, 255, 255))
         text_w = text.get_width()
-        text_h = text.get_height()
         text_x = background_x1 + i * 215 + 30 + character_card_width // 2 - text_w // 2 + k
         text_y = character_card_start_height + character_card_height + 10
         screen.blit(text, (text_x, text_y))
@@ -132,36 +147,14 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
                 all_sprites.update(event.pos)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 position = list(event.pos)
-                if character_card_start_height <= position[1] <= character_card_start_height + character_card_height:
-                    character_number = round((position[0] - background_x1 - 30) //
-                                             (character_card_width + 125))
-                    if current_player != -1:
-                        if current_player == 1:
-                            if characters[character_number] == player2_character:
-                                draw_menu(player1, player2, current_player, player1_character, player2_character)
-                            elif player1_character:
-                                player1_character = characters[character_number]
-                                draw_menu(player1, player2, current_player, player1_character, player2_character)
-                            else:
-                                color = 'red'
-                                player1_character = characters[character_number]
-                        else:
-                            if characters[character_number] == player1_character:
-                                draw_menu(player1, player2, current_player, player1_character, player2_character)
-                            elif player2_character:
-                                player2_character = characters[character_number]
-                                draw_menu(player1, player2, current_player, player1_character, player2_character)
-                            else:
-                                player2_character = characters[character_number]
-                                color = 'blue'
-                        pygame.draw.rect(screen, pygame.Color(color),
-                                         (character_card_start_width + character_number *
-                                          (character_card_width + 100) - 2, character_card_start_height - 2,
-                                          character_card_width + 3, character_card_height + 3), 2)
-                        pygame.display.flip()
-                    draw_menu(player1, player2, current_player, player1_character, player2_character)
-                elif useful_card_start_height <= position[1] <= card_height + useful_card_start_height:
-                    button_number = round((position[0] - useful_card_start_width) // (card_width + 100))
+                if useful_card_start_height <= position[1] <= card_height + useful_card_start_height:
+                    k = (position[0] - start_width + 400) / (useful_card_start_width)
+                    if k > 0.78:
+                        button_number = 2
+                    elif k > 0.4:
+                        button_number = 1
+                    else:
+                        button_number = 0
                     if button_number == 2 and player1_character and player2_character:
                         return player1_character, player2_character
                     elif button_number == 2:
@@ -171,6 +164,25 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
                             current_player = 1
                         if button_number == 1:
                             current_player = 2
-                        draw_menu(player1, player2, current_player, player1_character, player2_character)
+                        start_width = 150 + background_x1
+                        for i in range(3):
+                            k = 0 if current_player - 1 != i else current_player
+                            pygame.draw.rect(screen, pygame.Color(colors[k]),
+                                            (start_width + i * card_width,
+                                            useful_card_start_height, card_width, card_height), 5)
+                            start_width += 100
+
+                else:
+                    for i in heroes:
+                        i.is_chosen(position, current_player)
+                    for i in heroes:
+                        i.is_chosen(position, current_player)
+                    colors = ['black', 'red', 'blue']
+                    for i in range(character_number):
+                        color = colors[heroes[i].player]
+                        pygame.draw.rect(screen, pygame.Color(color),
+                                         (30 + background_x1 + i * 225 - 5, character_card_start_height - 5,
+                                          character_card_width + 10, character_card_height + 10), 5)
+
         pygame.display.flip()
         clock.tick(fps)
