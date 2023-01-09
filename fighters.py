@@ -42,6 +42,8 @@ class Fighter(pygame.sprite.Sprite):
 
         self.mask = pygame.mask.from_surface(self.image)
 
+        self.sum_damage = 0
+
     def cut_sheet(self, sheet, animations_data, x, y, scale):
         y = 0
         for animation_number in range(len(animations_data)):
@@ -62,13 +64,20 @@ class Fighter(pygame.sprite.Sprite):
         self.image = self.full_animations[self.animation_number][self.cur_frame]
         if self.direction == 'left':
             self.image = pygame.transform.flip(self.image, True, False)
+        if self.cur_frame > 3 and self.bending_down:
+            self.cur_frame = 3
+
+    def update_rect(self):
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.bottom = self.bottom_y
         self.fighter_height = self.rect.h
-        if self.cur_frame > 3 and self.bending_down:
-            self.cur_frame = 3
         self.fighter_width = self.rect.w
+
+    def start_new_animation(self, new_animation_number):
+        if new_animation_number != self.animation_number:
+            self.animation_number = new_animation_number
+            self.cur_frame = 0
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
@@ -98,6 +107,7 @@ class Fighter(pygame.sprite.Sprite):
                 self.jumping = True
         # прыжок
         if self.jumping:
+            self.start_new_animation(1)
             if self.bottom_y - self.jump_v >= self.floor_line:
                 self.jumping = False
                 self.jump_v = 30
@@ -144,14 +154,21 @@ class Fighter(pygame.sprite.Sprite):
         # проверяем попадание
         if attack_rect.colliderect(enemy.rect):
             enemy.health -= damage
+            self.sum_damage += damage
 
         if enemy.health <= 0:
             self.won = True
 
         pygame.draw.rect(screen, (0, 255, 0), attack_rect)
 
-    def special_skill(self):
-        pass
+    def show_sum_damage(self, screen):
+        font = pygame.font.Font(None, 40)
+        text = font.render(f'Суммарный урон: {str(self.sum_damage)}', True, (255, 0, 0))
+        if self.player_numb == 1:
+            text_x = self.screen_width * 0.1
+        else:
+            text_x = self.screen_width * 0.6
+        text_y = self.screen_height * 0.16
+        screen.blit(text, (text_x, text_y))
 
-    def fatality(self):
-        pass
+
