@@ -70,7 +70,6 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
     text_h = text.get_height()
     text_x = background_x1 + 25
     text_y = background_y1 + 50
-    text_y = background_y1 + 50
     screen.blit(text, (text_x, text_y))
 
     # Отрисовка выбора номера игрока и кнопки далее
