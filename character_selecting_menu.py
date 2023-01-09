@@ -9,7 +9,7 @@ SCREEN_HEIGHT = windll.user32.GetSystemMetrics(1) - 50
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
-characters = ['Dio Brando', 'Sasuke', 'Rycon', 'Aizen Sousuke']
+characters = ['Dio Brando', 'Sasuke', 'Kuchiki Rukia', 'Aizen Sousuke']
 background_rect, background_width, background_height, background_x1, background_y1 = draw_background()
 
 
@@ -26,23 +26,26 @@ class Hero(pygame.sprite.Sprite):
         all_sprites.add(self)
 
     def update(self, pos):
-        if not self.already_opened:
-            if self.rect.collidepoint(pos[0], pos[1]):
-                with open(f'project_files\\{self.name}.txt') as f:
-                    file = f.read().split('\n')
-                    i = -30
-                    for line in file:
-                        i += 30
-                        font = pygame.font.Font(None, 25)
-                        text = font.render(line, True, (255, 255, 255))
-                        text_x = self.rect.x + 105
-                        text_y = self.rect.y + i
-                        screen.blit(text, (text_x, text_y))
-                    self.already_opened = True
+        if self.rect.collidepoint(pos[0], pos[1]) and not self.already_opened:
+            with open(f'project_files\\{self.name}.txt', encoding='utf-8') as f:
+                file = f.read().split('\n')
+                i = -25
+                for line in file:
+                    i += 25
+                    font = pygame.font.SysFont('sans-serif', 25)
+                    text = font.render(line, True, (255, 255, 255))
+                    text_x = self.rect.x + 105
+                    text_y = self.rect.y + i
+                    screen.blit(text, (text_x, text_y))
+                self.already_opened = True
+
+    def set_already_opened(self):
+        self.already_opened = False
 
 
+heroes = []
 for i in range(4):
-    Hero(120 + background_x1 + i * 200, background_y1 + 140, characters[i])
+    heroes.append(Hero(30 + background_x1 + i * 225, background_y1 + 140, characters[i]))
 
 
 def terminate():
@@ -52,12 +55,15 @@ def terminate():
 
 def draw_menu(player1, player2, current_player=-1, player1_character='', player2_character=''):
     background_rect, background_width, background_height, background_x1, background_y1 = draw_background()
+    all_sprites.draw(screen)
+    for i in heroes:
+        i.set_already_opened()
     pygame.display.flip()
     fps = 10
     character_number = 4
     character_card_width = 100
     character_card_height = 150
-    characters = ['Dio Brando', 'Sasuke', 'Rycon', 'Aizen Sousuke']
+    characters = ['Dio Brando', 'Sasuke', 'Kuchiki Rukia', 'Aizen Sousuke']
     font = pygame.font.Font(None, 50)
     text = font.render("Выберите своего персонажа:", True, (255, 255, 255))
     text_w = text.get_width()
@@ -96,7 +102,7 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
     # Отрисовка карточек персонажей
     character_card_start_width = 120 + background_x1
     character_card_start_height = 140 + background_y1
-    start_width = character_card_start_width
+    k = 0
     for i in range(character_number):
         color = 'black'
         if player1_character == characters[i]:
@@ -104,17 +110,17 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
         elif player2_character == characters[i]:
             color = 'blue'
         pygame.draw.rect(screen, pygame.Color(color),
-                         (start_width + i * character_card_width - 5, character_card_start_height - 5,
+                         (30 + background_x1 + i * 225 - 5, character_card_start_height - 5,
                           character_card_width + 10, character_card_height + 10), 5)
         font = pygame.font.Font(None, 30)
         text = font.render(characters[i], True, (255, 255, 255))
         text_w = text.get_width()
         text_h = text.get_height()
-        text_x = start_width + (i + 0.5) * character_card_width - text_w // 2
-        text_y = character_card_start_height + character_card_height + 5
+        text_x = background_x1 + i * 215 + 30 + character_card_width // 2 - text_w // 2 + k
+        text_y = character_card_start_height + character_card_height + 10
         screen.blit(text, (text_x, text_y))
         pygame.display.flip()
-        start_width += 100
+        k += 10
     all_sprites.draw(screen)
     pygame.display.flip()
 
@@ -128,8 +134,8 @@ def draw_menu(player1, player2, current_player=-1, player1_character='', player2
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 position = list(event.pos)
                 if character_card_start_height <= position[1] <= character_card_start_height + character_card_height:
-                    character_number = round((position[0] - character_card_start_width) //
-                                             (character_card_width + 100))
+                    character_number = round((position[0] - background_x1 - 30) //
+                                             (character_card_width + 125))
                     if current_player != -1:
                         if current_player == 1:
                             if characters[character_number] == player2_character:
