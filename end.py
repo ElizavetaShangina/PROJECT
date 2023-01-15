@@ -9,8 +9,9 @@ SCREEN_HEIGHT = windll.user32.GetSystemMetrics(1) - 50
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 characters = ['Dio Brando', 'Sasuke', 'Kuchiki Rukia', 'Aizen Sousuke']
-image_num = [20, 12, 7, 14]
-fps = 5
+image_num = [13, 12, 7, 14]
+scales = [2, 5, 1, 1]
+fps = 10
 all_sprites = pygame.sprite.Group()
 
 
@@ -33,20 +34,24 @@ class Character(pygame.sprite.Sprite):
         self.name = name
         self.x, self.y = x, y
         self.columns = image_num[characters.index(self.name)]
-        sheet = load_image(f'project_files\\{self.name} win.png', -1)
-        sheet1 = pygame.transform.scale(sheet, (self.columns * 100, 150))
-        self.cut_sheet(sheet1, self.columns)
+        self.scale = scales[characters.index(self.name)]
+        sheet = load_image(f'project_files\\{self.name} win.png')
+        self.cut_sheet(sheet, self.columns)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
         self.rect = self.rect.move(self.x, self.y)
         all_sprites.add(self)
 
     def cut_sheet(self, sheet, columns, rows=1):
-        self.rect = pygame.Rect(0, 0, sheet.get_width() // columns, sheet.get_height())
+        frame_width = sheet.get_width() // columns
+        frame_height = sheet.get_height()
+        self.rect = pygame.Rect(0, 0, frame_width, frame_height)
         for j in range(rows):
             for i in range(columns):
                 frame_location = (self.rect.w * i, self.rect.h * j)
-                self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
+                image = sheet.subsurface(pygame.Rect(frame_location, self.rect.size))
+                transformed_image = pygame.transform.scale(image, (frame_width * self.scale, frame_height * self.scale))
+                self.frames.append(transformed_image)
 
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
