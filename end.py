@@ -112,7 +112,7 @@ def draw_end(winners_name, winners_character, winner_time, great_num, middle_num
                          background_y1 + background_height - 100, 'Выйти из игры', terminate)
     button_exit.draw()
 
-    Character(winners_character, background_x1 + background_width // 2 + 100, background_y1 + background_height // 2 - 50)
+    Character(winners_character, background_x1 + background_width // 2 + 50, background_y1 + background_height // 2 - 100)
     all_sprites.draw(screen)
 
     while True:
