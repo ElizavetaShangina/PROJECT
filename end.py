@@ -13,6 +13,7 @@ image_num = [13, 12, 7, 14]
 scales = [2, 5, 1, 1]
 fps = 10
 all_sprites = pygame.sprite.Group()
+background_rect, background_width, background_height, background_x1, background_y1 = draw_background()
 
 
 def load_image(path, colorkey=None):
@@ -56,6 +57,7 @@ class Character(pygame.sprite.Sprite):
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
+        screen.blit(self.image, (self.x, self.y))
 
 
 class Button:
@@ -85,23 +87,32 @@ def terminate():
     sys.exit()
 
 
-def draw_end(winners_name, winners_character):
-    background_rect, background_width, background_height, background_x1, background_y1 = draw_background()
-    text = f'The Winner is {winners_name}'
-    font = pygame.font.Font(None, 100)
+def draw_text(text, font, x, y, middle=False):
+    font = pygame.font.Font(None, font)
     text = font.render(text, True, (255, 0, 0))
     text_w = text.get_width()
     text_h = text.get_height()
-    text_x = background_x1 + 0.5 * background_width - text_w // 2
-    text_y = background_y1 + 100
+    if middle:
+        text_x = background_x1 + 0.5 * background_width - text_w // 2
+    else:
+        text_x = x
+    text_y = background_y1 + y
     screen.blit(text, (text_x, text_y))
-    pygame.display.flip()
 
+
+def draw_end(winners_name, winners_character, winner_time, great_num, middle_num, weak_num, low_num):
+    draw_text(f'The Winner is {winners_name}', 100, 0, 50, True)
+    draw_text(f'Статистика игры:', 50, background_x1 + 50, 130)
+    draw_text(f'Время: {winner_time}', 50, background_x1 + 90, 170)
+    draw_text(f'Сильные атаки: {great_num}', 50, background_x1 + 90, 210)
+    draw_text(f'Средние атаки: {middle_num}', 50, background_x1 + 90, 250)
+    draw_text(f'Слабые атаки: {weak_num}', 50, background_x1 + 90, 290)
+    draw_text(f'Нижние атаки: {low_num}', 50, background_x1 + 90, 330)
     button_exit = Button(200, 50, background_x1 + background_width - 300,
                          background_y1 + background_height - 100, 'Выйти из игры', terminate)
     button_exit.draw()
 
-    Character(winners_character, background_x1 + background_width // 2 - 50, background_y1 + background_height // 2 - 50)
+    Character(winners_character, background_x1 + background_width // 2 + 100, background_y1 + background_height // 2 - 50)
     all_sprites.draw(screen)
 
     while True:
@@ -111,9 +122,14 @@ def draw_end(winners_name, winners_character):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button_exit.update(event.pos)
         draw_background()
-        screen.blit(text, (text_x, text_y))
-        button_exit.draw()
+        draw_text(f'The Winner is {winners_name}', 100, 0, 50, True)
+        draw_text(f'Статистика игры:', 50, background_x1 + 50, 130)
+        draw_text(f'Время: {winner_time}', 50, background_x1 + 90, 170)
+        draw_text(f'Сильные атаки: {great_num}', 50, background_x1 + 90, 210)
+        draw_text(f'Средние атаки: {middle_num}', 50, background_x1 + 90, 250)
+        draw_text(f'Слабые атаки: {weak_num}', 50, background_x1 + 90, 290)
+        draw_text(f'Нижние атаки: {low_num}', 50, background_x1 + 90, 330)
         all_sprites.update()
-        all_sprites.draw(screen)
+        button_exit.draw()
         pygame.display.flip()
         clock.tick(fps)
