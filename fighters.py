@@ -71,6 +71,8 @@ class Fighter(pygame.sprite.Sprite):
         self.cycle_death = False
         self.animation_changed = False
 
+        self.attacks_were_made = [0, 0, 0, 0]
+
     def cut_sheet(self, sheet, animations_data, width, height, x, y):
         for animation_number in range(len(animations_data)):
             frames = []
@@ -185,19 +187,25 @@ class Fighter(pygame.sprite.Sprite):
                 else:
                     self.moving = False
 
-            # движение
+            # движение и проверка на столкновения
             if self.moving:
                 self.start_new_animation(3)
+                is_to_the_left = self.check_collisions_rect.right < enemy.check_collisions_rect.left
+                is_to_the_right = self.check_collisions_rect.left > enemy.check_collisions_rect.right
                 if self.direction == 'right':
-                    if self.check_collisions_rect.right + self.speed <= self.screen_width - 50:
+                    if is_to_the_left and (self.check_collisions_rect.right + self.speed
+                                           < enemy.check_collisions_rect.left):
                         self.x += self.speed
-                        if pygame.sprite.collide_mask(self, enemy):
-                            self.x -= self.speed
+                    elif is_to_the_right and (self.check_collisions_rect.right + self.speed + 10
+                                              < self.screen_width - 50):
+                        self.x += self.speed
+
                 elif self.direction == 'left':
-                    if self.check_collisions_rect.left - self.speed >= 50:
+                    if is_to_the_left and self.check_collisions_rect.left - self.speed - 10 > 50:
                         self.x -= self.speed
-                        if pygame.sprite.collide_mask(self, enemy):
-                            self.x += self.speed
+                    elif is_to_the_right and self.check_collisions_rect.left - self.speed >\
+                            enemy.check_collisions_rect.right:
+                        self.x -= self.speed
 
     def jump(self, keys):
         if not self.dead:
@@ -277,11 +285,13 @@ class Fighter(pygame.sprite.Sprite):
                         else:
                             self.direction = 'right'
 
+                # проверяем попадание
                 if pygame.sprite.collide_mask(self, enemy) is not None and self.can_damage:
                     enemy.health -= self.damage
                     enemy.hurt = True
                     self.can_damage = False
                     self.damage = 0
+                    self.attacks_were_made[attack_type - 1] += 1
 
                 if enemy.health <= 0:
                     self.won = True

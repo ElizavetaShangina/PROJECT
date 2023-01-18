@@ -1,7 +1,7 @@
 import pygame
 from fighters import Fighter
 from healthbars import HealthBar
-from animations_data import DIO_data, Sasuke_data
+from animations_data import DIO_data, Sasuke_data, Aizen_data, Rukia_data
 
 
 def start_fighting(player1_name, player2_name, selected_background, character1, character2):
@@ -23,21 +23,35 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
     # загрузка спрайт листов
     DIO_sprite_sheet = pygame.image.load('project_files/Dio Brando spritesheet.png')
     Sasuke_sprite_sheet = pygame.image.load('project_files/Sasuke spritesheet.png')
+    Aizen_sprite_sheet = pygame.image.load('project_files/Aizen Sousuke spritesheet.png')
+    Rukia_sprite_sheet = pygame.image.load('project_files/Kuchiki Rukia spritesheet.png')
 
     # Бойцы
     if character1 == 'Dio Brando':
         fighter1 = Fighter(player1_name, 1, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
                            DIO_sprite_sheet, DIO_data, all_sprites)
     elif character1 == 'Sasuke':
-        fighter1 = Fighter(player1_name, 1, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
                            Sasuke_sprite_sheet, Sasuke_data, all_sprites)
+    elif character1 == 'Aizen Sousuke':
+        fighter1 = Fighter(player1_name, 1, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
+                           Aizen_sprite_sheet, Aizen_data, all_sprites)
+    elif character1 == 'Kuchiki Rukia':
+        fighter1 = Fighter(player1_name, 1, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
+                           Rukia_sprite_sheet, Rukia_data, all_sprites)
 
     if character2 == 'Dio Brando':
-        fighter2 = Fighter(player2_name, 2, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter2 = Fighter(player2_name, 2, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
                            DIO_sprite_sheet, DIO_data, all_sprites)
     elif character2 == 'Sasuke':
         fighter2 = Fighter(player2_name, 2, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
                            Sasuke_sprite_sheet, Sasuke_data, all_sprites)
+    elif character2 == 'Aizen Sousuke':
+        fighter2 = Fighter(player1_name, 2, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
+                           Aizen_sprite_sheet, Aizen_data, all_sprites)
+    elif character2 == 'Kuchiki Rukia':
+        fighter2 = Fighter(player1_name, 2, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
+                           Rukia_sprite_sheet, Rukia_data, all_sprites)
 
     # Полоски здоровья
     health_bar1 = HealthBar(1, HEIGHT, WIDTH, fighter1.health)
@@ -158,6 +172,3 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
         iteration_counter += 1
 
     pygame.quit()
-
-
-start_fighting('Player1', 'Player2', 'ruined_house_in_the_forest', 'Dio Brando', 'Sasuke')
