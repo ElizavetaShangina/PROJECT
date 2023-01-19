@@ -22,8 +22,11 @@ DIO_offsets = [
 ]
 DIO_scale = 2
 DIO_cycled_frames = [3, 3, 5]
+DIO_characteristics = [2, 5, 7, 6]
+DIO_speed = 5
 
-DIO_data = [DIO_frame_width, DIO_frame_height, DIO_animations_steps, DIO_cycled_frames, DIO_offsets, DIO_scale]
+DIO_data = [DIO_frame_width, DIO_frame_height, DIO_animations_steps, DIO_cycled_frames, DIO_offsets,
+            DIO_scale, DIO_characteristics, DIO_speed]
 
 Sasuke_animations_steps = [6, 3, 4, 6, 4, 6, 7, 8, 7]
 Sasuke_frame_width = 160
@@ -41,9 +44,11 @@ Sasuke_offsets = [
 ]
 Sasuke_scale = 5
 Sasuke_cycled_frames = [1, 1, 3]
+Sasuke_characteristics = [1, 2, 4, 3]
+Sasuke_speed = 7
 
 Sasuke_data = [Sasuke_frame_width, Sasuke_frame_height, Sasuke_animations_steps, Sasuke_cycled_frames,
-               Sasuke_offsets, Sasuke_scale]
+               Sasuke_offsets, Sasuke_scale, Sasuke_characteristics, Sasuke_speed]
 
 Aizen_animations_steps = [5, 3, 5, 8, 4, 6, 7, 5, 6]
 Aizen_frame_width = 320
@@ -62,8 +67,10 @@ Aizen_offsets = [
 ]
 Aizen_scale = 2.3
 Aizen_cycled_frames = [1, 2, 3]
+Aizen_characteristics = [1, 2, 5, 3]
+Aizen_speed = 6
 Aizen_data = [Aizen_frame_width, Aizen_frame_height, Aizen_animations_steps, Aizen_cycled_frames, Aizen_offsets,
-              Aizen_scale]
+              Aizen_scale, Aizen_characteristics, Aizen_speed]
 
 Rukia_animations_steps = [8, 3, 3, 7, 5, 5, 8, 6, 6]
 Rukia_frame_width = 220
@@ -81,5 +88,7 @@ Rukia_offsets = [
 ]
 Rukia_scale = 2.7
 Rukia_cycled_frames = [1, 1, 2]
+Rukia_characteristics = [1, 2, 4, 3]
+Rukia_speed = 7
 Rukia_data = [Rukia_frame_width, Rukia_frame_height, Rukia_animations_steps, Rukia_cycled_frames, Rukia_offsets,
-              Rukia_scale]
+              Rukia_scale, Rukia_characteristics, Rukia_speed]

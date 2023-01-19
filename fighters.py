@@ -30,7 +30,7 @@ class Fighter(pygame.sprite.Sprite):
         self.screen_height = screen_height
         self.floor_line = self.screen_height * 0.95
 
-        self.speed = 5
+        self.speed = data[7]
         self.moving = False
 
         self.jump_v = 30
@@ -72,6 +72,7 @@ class Fighter(pygame.sprite.Sprite):
         self.animation_changed = False
 
         self.attacks_were_made = [0, 0, 0, 0]
+        self.attacks_damage = data[6]
 
     def cut_sheet(self, sheet, animations_data, width, height, x, y):
         for animation_number in range(len(animations_data)):
@@ -255,17 +256,14 @@ class Fighter(pygame.sprite.Sprite):
             if self.attacking or self.low_attacking:
                 # определяем тип атаки и её урон
                 if attack_type == 1 and self.animation_number not in [5, 6, 7]:
-                    self.damage = 1
                     self.start_new_animation(4)
                 elif attack_type == 2 and self.animation_number not in [4, 6, 7]:
-                    self.damage = 4
                     self.start_new_animation(5)
                 elif attack_type == 3 and self.animation_number not in [4, 5, 7]:
-                    self.damage = 5
                     self.start_new_animation(6)
                 elif attack_type == 4 and self.animation_number not in [4, 5, 6]:
-                    self.damage = 5
                     self.start_new_animation(7)
+                self.damage = self.attacks_damage[attack_type - 1]
 
                 # меняем направление удара в сторону соперника
                 if self.animation_changed:
