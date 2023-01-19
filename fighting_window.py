@@ -25,10 +25,10 @@ def draw_background(file_name):
 
     screen.blit(background, (background_x1, background_y1, background_x1 + background_width,
                              background_y1 + background_height))
-    return background_rect, background_width, background_height, background_x1, background_y1
+    return background_rect, background_width, background_height, background_x1, background_y1, background
 
 
-background_rect, background_width, background_height, background_x1, background_y1 = draw_background('forest')
+background_rect, background_width, background_height, background_x1, background_y1, background_image = draw_background('forest')
 
 
 def draw_intro(seconds, screen):
@@ -57,7 +57,7 @@ def draw_player_name(name, number):
 
 def start_fighting(player1_name, player2_name, selected_background, character1, character2):
     pygame.mixer.music.play(-1)
-    background_rect, background_width, background_height, background_x1, background_y1 = draw_background(
+    background_rect, background_width, background_height, background_x1, background_y1, background_image = draw_background(
         selected_background)
     fps = 60
     WIDTH, HEIGHT = background_x1 + background_width, background_height + background_y1
@@ -126,7 +126,8 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
             attack_type2 = 0
 
         # Очистка экрана
-        draw_background(selected_background)
+        screen.blit(background_image, (background_x1, background_y1, background_x1 + background_width,
+                                 background_y1 + background_height))
 
         if pygame.time.get_ticks() - start_time >= 1000:
             seconds_before_start -= 1

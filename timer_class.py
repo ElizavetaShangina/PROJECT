@@ -30,5 +30,4 @@ class Timer:
         text = font.render(self.text, True, (255, 0, 0))
         text_w = text.get_width()
         text_x = self.middle_x - text_w // 2
-        print(self.text, text_x, self.start_y)
         screen.blit(text, (text_x, self.start_y))
