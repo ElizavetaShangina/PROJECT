@@ -158,7 +158,7 @@ def draw_menu(player1, player2, current_player=-1):
                     if button_number == 2 and player1_character and player2_character:
                         return player1_character, player2_character
                     elif button_number == 2:
-                        print('Выберите персонажа для обоих игроков')
+                        continue
                     else:
                         if button_number == 0:
                             current_player = 1
