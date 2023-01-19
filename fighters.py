@@ -1,5 +1,9 @@
 import pygame
 
+fatality_sound = pygame.mixer.Sound('project_files\\fatality.wav')
+finish_him_sound = pygame.mixer.Sound('project_files\\finish_him.wav')
+pygame.mixer.music.load('project_files\\fight_font.mp3')
+
 
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, player_name, player_numb, x, y, screen_width, screen_height, sheet, data, group):
@@ -38,6 +42,7 @@ class Fighter(pygame.sprite.Sprite):
 
         self.bending_down = False
         self.health = 200
+        self.finish_me = False
 
         self.won = False
         self.animation_number = 0
@@ -286,20 +291,15 @@ class Fighter(pygame.sprite.Sprite):
                     self.damage = 0
                     self.attacks_were_made[attack_type - 1] += 1
 
+                if enemy.health <= 20 and not self.finish_me:
+                    pygame.mixer.Sound.play(finish_him_sound)
+                    self.finish_me = True
+
                 if enemy.health <= 0:
+                    pygame.mixer.Sound.play(fatality_sound)
                     self.won = True
                     enemy.dead = True
 
     def die(self):
         if self.dead:
             self.start_new_animation(8)
-
-    def show_player_name(self, screen):
-        font = pygame.font.Font(None, 40)
-        text = font.render(self.player_name, True, (255, 255, 255))
-        if self.player_numb == 1:
-            text_x = self.screen_width * 0.1
-        else:
-            text_x = self.screen_width * 0.6
-        text_y = self.screen_height * 0.025
-        screen.blit(text, (text_x, text_y))

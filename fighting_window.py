@@ -4,6 +4,32 @@ from healthbars import HealthBar
 from animations_data import DIO_data, Sasuke_data, Aizen_data, Rukia_data
 from timer_class import Timer
 
+from ctypes import *
+
+pygame.init()
+SCREEN_WIDTH = windll.user32.GetSystemMetrics(0)
+SCREEN_HEIGHT = windll.user32.GetSystemMetrics(1) - 50
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+
+
+def draw_background(file_name):
+    screen.fill((0, 0, 0))
+    background_ = pygame.image.load(f'project_files\\{file_name}.jpg').convert()
+    background = pygame.transform.scale(background_, (960, 480))
+    background_rect = background.get_rect()
+    background_width = background_rect[2]
+    background_height = background_rect[3]
+    background_x1 = (SCREEN_WIDTH - background_width) / 2
+    background_y1 = (SCREEN_HEIGHT - background_height) / 2
+
+    screen.blit(background, (background_x1, background_y1, background_x1 + background_width,
+                             background_y1 + background_height))
+    return background_rect, background_width, background_height, background_x1, background_y1
+
+
+background_rect, background_width, background_height, background_x1, background_y1 = draw_background('forest')
+
 
 def draw_intro(seconds, screen):
     font = pygame.font.Font(None, 90)
@@ -13,24 +39,31 @@ def draw_intro(seconds, screen):
         text = font.render(str(seconds), True, (255, 0, 0))
 
     text_w = text.get_width()
-    text_x = screen.get_width() // 2 - text_w // 2
-    text_y = 125
+    text_x = background_x1 + background_width // 2 - text_w // 2
+    text_y = background_y1 + 100
+    screen.blit(text, (text_x, text_y))
+
+
+def draw_player_name(name, number):
+    font = pygame.font.Font(None, 40)
+    text = font.render(name, True, (255, 255, 255))
+    if number == 1:
+        text_x = background_x1 + 60
+    else:
+        text_x = background_x1 + background_width - 328
+    text_y = background_y1 + 20
     screen.blit(text, (text_x, text_y))
 
 
 def start_fighting(player1_name, player2_name, selected_background, character1, character2):
-    pygame.init()
-    WIDTH, HEIGHT = 1200, 600
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.mixer.music.play(-1)
+    background_rect, background_width, background_height, background_x1, background_y1 = draw_background(
+        selected_background)
+    fps = 60
+    WIDTH, HEIGHT = background_x1 + background_width, background_height + background_y1
     pygame.display.set_caption('Fighting')
     clock = pygame.time.Clock()
-    fps = 60
     iteration_counter = 0
-
-    # Фон
-    background_image = pygame.image.load(f'project_files/{selected_background}.jpg').convert()
-    scaled_background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
-    screen.blit(scaled_background_image, (0, 0))
 
     all_sprites = pygame.sprite.Group()
 
@@ -40,37 +73,41 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
     Aizen_sprite_sheet = pygame.image.load('project_files/Aizen Sousuke spritesheet.png')
     Rukia_sprite_sheet = pygame.image.load('project_files/Kuchiki Rukia spritesheet.png')
 
+    start_x1, start_y1 = background_x1 + background_width * 0.2, HEIGHT * 0.95
+    start_x2, start_y2 = background_x1 + background_width * 0.7, HEIGHT * 0.95
+
+
     # Бойцы
     if character1 == 'Dio Brando':
-        fighter1 = Fighter(player1_name, 1, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, WIDTH, HEIGHT,
                            DIO_sprite_sheet, DIO_data, all_sprites)
     elif character1 == 'Sasuke':
-        fighter1 = Fighter(player1_name, 1, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, WIDTH, HEIGHT,
                            Sasuke_sprite_sheet, Sasuke_data, all_sprites)
     elif character1 == 'Aizen Sousuke':
-        fighter1 = Fighter(player1_name, 1, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, WIDTH, HEIGHT,
                            Aizen_sprite_sheet, Aizen_data, all_sprites)
     elif character1 == 'Kuchiki Rukia':
-        fighter1 = Fighter(player1_name, 1, WIDTH * 0.2, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, WIDTH, HEIGHT,
                            Rukia_sprite_sheet, Rukia_data, all_sprites)
 
     if character2 == 'Dio Brando':
-        fighter2 = Fighter(player2_name, 2, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter2 = Fighter(player2_name, 2, start_x2, start_y2, WIDTH, HEIGHT,
                            DIO_sprite_sheet, DIO_data, all_sprites)
     elif character2 == 'Sasuke':
-        fighter2 = Fighter(player2_name, 2, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter2 = Fighter(player2_name, 2, start_x2, start_y2, WIDTH, HEIGHT,
                            Sasuke_sprite_sheet, Sasuke_data, all_sprites)
     elif character2 == 'Aizen Sousuke':
-        fighter2 = Fighter(player1_name, 2, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter2 = Fighter(player1_name, 2, start_x2, start_y2, WIDTH, HEIGHT,
                            Aizen_sprite_sheet, Aizen_data, all_sprites)
     elif character2 == 'Kuchiki Rukia':
-        fighter2 = Fighter(player1_name, 2, WIDTH * 0.7, HEIGHT * 0.95, WIDTH, HEIGHT,
+        fighter2 = Fighter(player1_name, 2, start_x2, start_y2, WIDTH, HEIGHT,
                            Rukia_sprite_sheet, Rukia_data, all_sprites)
 
     # Полоски здоровья
-    health_bar1 = HealthBar(1, HEIGHT, WIDTH, fighter1.health)
-    health_bar2 = HealthBar(2, HEIGHT, WIDTH, fighter2.health)
-    timer = Timer()
+    health_bar1 = HealthBar(background_height * 0.05, background_width * 0.3, fighter1.health, background_x1 + 50, background_y1 + 50)
+    health_bar2 = HealthBar(background_height * 0.05, background_width * 0.3, fighter2.health, background_x1 + background_width - 338, background_y1 + 50)
+    timer = Timer(SCREEN_WIDTH // 2, SCREEN_HEIGHT + background_y1 + 30)
 
     pygame.display.flip()
     running = True
@@ -89,7 +126,7 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
             attack_type2 = 0
 
         # Очистка экрана
-        screen.blit(scaled_background_image, (0, 0))
+        draw_background(selected_background)
 
         if pygame.time.get_ticks() - start_time >= 1000:
             seconds_before_start -= 1
@@ -195,8 +232,8 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
         health_bar2.change_health(fighter2.health, screen)
 
         # отрисовка имён игроков
-        fighter1.show_player_name(screen)
-        fighter2.show_player_name(screen)
+        draw_player_name(player1_name, 1)
+        draw_player_name(player2_name, 2)
 
         pygame.display.flip()
         clock.tick(fps)
@@ -227,9 +264,5 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
         if timer.seconds == seconds_before_quit:
             running = False
 
-    pygame.quit()
-    return winners_name, winners_character, winners_time, weak_at, medium_at, heavy_at, low_at
-
-
-print(start_fighting('PLAYER1', 'PLAYER2', 'sunset', 'Dio Brando', 'Aizen Sousuke'))
-
+    pygame.mixer.music.stop()
+    return winners_name, winners_character, winners_time, heavy_at, medium_at, weak_at, low_at
