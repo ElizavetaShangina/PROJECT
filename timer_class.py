@@ -10,6 +10,8 @@ class Timer:
         self.minutes = 0
         self.text = ''
         self.counter = -1
+        self.stop_counting = False
+        self.fight_started = False
 
     def update(self):
         self.counter += 1
@@ -17,8 +19,8 @@ class Timer:
             self.seconds += 1
             self.minutes += self.seconds // 60
             self.seconds %= 60
-            self.text = f'{self.minutes}:{str(self.seconds).rjust(2, "0")}'
-
+            if not self.stop_counting:
+                self.text = f'{self.minutes}:{str(self.seconds).rjust(2, "0")}'
         font = pygame.font.Font(None, 55)
         text = font.render(self.text, True, (255, 0, 0))
         text_w = text.get_width()

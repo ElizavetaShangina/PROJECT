@@ -37,7 +37,7 @@ class Fighter(pygame.sprite.Sprite):
         self.jumping = False
 
         self.bending_down = False
-        self.health = 100
+        self.health = 200
 
         self.won = False
         self.animation_number = 0
@@ -159,11 +159,6 @@ class Fighter(pygame.sprite.Sprite):
             self.animation_changed = True
         else:
             self.animation_changed = False
-
-    def draw(self, screen):
-        pass
-        # pygame.draw.rect(screen, self.color, self.check_collisions_rect)
-        # pygame.draw.rect(screen, self.color, self.rect)
 
     def move(self, keys, enemy):
         if not self.dead:
