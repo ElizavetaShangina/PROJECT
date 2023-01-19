@@ -1,17 +1,22 @@
 import pygame
+from ctypes import *
 
 pygame.init()
-screen = pygame.display.set_mode((1200, 600))
+SCREEN_WIDTH = windll.user32.GetSystemMetrics(0)
+SCREEN_HEIGHT = windll.user32.GetSystemMetrics(1) - 50
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
 class Timer:
-    def __init__(self):
+    def __init__(self, middle_x, start_y):
         self.seconds = 0
         self.minutes = 0
         self.text = ''
         self.counter = -1
         self.stop_counting = False
         self.fight_started = False
+        self.middle_x = middle_x
+        self.start_y = start_y
 
     def update(self):
         self.counter += 1
@@ -24,8 +29,6 @@ class Timer:
         font = pygame.font.Font(None, 55)
         text = font.render(self.text, True, (255, 0, 0))
         text_w = text.get_width()
-        text_x = screen.get_width() // 2 - text_w // 2
-        text_y = 30
-        screen.blit(text, (text_x, text_y))
-
+        text_x = self.middle_x - text_w // 2
+        screen.blit(text, (text_x, self.start_y))
 
