@@ -107,7 +107,7 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
     # Полоски здоровья
     health_bar1 = HealthBar(background_height * 0.05, background_width * 0.3, fighter1.health, background_x1 + 50, background_y1 + 50)
     health_bar2 = HealthBar(background_height * 0.05, background_width * 0.3, fighter2.health, background_x1 + background_width - 338, background_y1 + 50)
-    timer = Timer(SCREEN_WIDTH // 2, SCREEN_HEIGHT + background_y1 + 30)
+    timer = Timer(SCREEN_WIDTH // 2, background_y1 + 30)
 
     pygame.display.flip()
     running = True
