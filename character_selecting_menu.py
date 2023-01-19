@@ -148,13 +148,12 @@ def draw_menu(player1, player2, current_player=-1):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 position = list(event.pos)
                 if useful_card_start_height <= position[1] <= card_height + useful_card_start_height:
-                    k = (position[0] - start_width + 400) / (useful_card_start_width)
-                    if k > 0.78:
-                        button_number = 2
-                    elif k > 0.4:
-                        button_number = 1
-                    else:
+                    if 150 + background_x1 <= position[0] <= 150 + background_x1 + card_width:
                         button_number = 0
+                    elif 250 + background_x1 + card_width <= position[0] <= 250 + background_x1 + card_width * 2:
+                        button_number = 1
+                    elif 350 + background_x1 + card_width * 2 <= position[0] <= 350 + background_x1 + card_width * 3:
+                        button_number = 2
                     if button_number == 2 and player1_character and player2_character:
                         return player1_character, player2_character
                     elif button_number == 2:
