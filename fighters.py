@@ -6,7 +6,7 @@ pygame.mixer.music.load('project_files\\fight_font.mp3')
 
 
 class Fighter(pygame.sprite.Sprite):
-    def __init__(self, player_name, player_numb, x, y, screen_width, screen_height, sheet, data, group):
+    def __init__(self, player_name, player_numb, x, y, background_x, screen_width, screen_height, sheet, data, group):
         super().__init__(group)
 
         self.player_name = player_name
@@ -32,6 +32,7 @@ class Fighter(pygame.sprite.Sprite):
 
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.background_x = background_x
         self.floor_line = self.screen_height * 0.95
 
         self.speed = data[7]
@@ -202,7 +203,7 @@ class Fighter(pygame.sprite.Sprite):
                         self.x += self.speed
 
                 elif self.direction == 'left':
-                    if is_to_the_left and self.check_collisions_rect.left - self.speed - 10 > 50:
+                    if is_to_the_left and (self.check_collisions_rect.left - self.speed - 10 > self.background_x + 50):
                         self.x -= self.speed
                     elif is_to_the_right and self.check_collisions_rect.left - self.speed >\
                             enemy.check_collisions_rect.right:

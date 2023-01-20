@@ -79,29 +79,29 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
 
     # Бойцы
     if character1 == 'Dio Brando':
-        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, background_x1, WIDTH, HEIGHT,
                            DIO_sprite_sheet, DIO_data, all_sprites)
     elif character1 == 'Sasuke':
-        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, background_x1, WIDTH, HEIGHT,
                            Sasuke_sprite_sheet, Sasuke_data, all_sprites)
     elif character1 == 'Aizen Sousuke':
-        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, background_x1, WIDTH, HEIGHT,
                            Aizen_sprite_sheet, Aizen_data, all_sprites)
     elif character1 == 'Kuchiki Rukia':
-        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, WIDTH, HEIGHT,
+        fighter1 = Fighter(player1_name, 1, start_x1, start_y1, background_x1, WIDTH, HEIGHT,
                            Rukia_sprite_sheet, Rukia_data, all_sprites)
 
     if character2 == 'Dio Brando':
-        fighter2 = Fighter(player2_name, 2, start_x2, start_y2, WIDTH, HEIGHT,
+        fighter2 = Fighter(player2_name, 2, start_x2, start_y2, background_x1, WIDTH, HEIGHT,
                            DIO_sprite_sheet, DIO_data, all_sprites)
     elif character2 == 'Sasuke':
-        fighter2 = Fighter(player2_name, 2, start_x2, start_y2, WIDTH, HEIGHT,
+        fighter2 = Fighter(player2_name, 2, start_x2, start_y2, background_x1, WIDTH, HEIGHT,
                            Sasuke_sprite_sheet, Sasuke_data, all_sprites)
     elif character2 == 'Aizen Sousuke':
-        fighter2 = Fighter(player1_name, 2, start_x2, start_y2, WIDTH, HEIGHT,
+        fighter2 = Fighter(player1_name, 2, start_x2, start_y2, background_x1, WIDTH, HEIGHT,
                            Aizen_sprite_sheet, Aizen_data, all_sprites)
     elif character2 == 'Kuchiki Rukia':
-        fighter2 = Fighter(player1_name, 2, start_x2, start_y2, WIDTH, HEIGHT,
+        fighter2 = Fighter(player1_name, 2, start_x2, start_y2, background_x1, WIDTH, HEIGHT,
                            Rukia_sprite_sheet, Rukia_data, all_sprites)
 
     # Полоски здоровья
@@ -118,6 +118,7 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
     start_time = pygame.time.get_ticks()
     game_started = False
     seconds_before_start = 3
+    show_end_window = False
 
     while running:
         if not fighter1.attacking and not fighter1.low_attacking:
@@ -253,6 +254,7 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
                 medium_at = fighter1.attacks_were_made[1]
                 heavy_at = fighter1.attacks_were_made[2]
                 low_at = fighter1.attacks_were_made[3]
+                show_end_window = True
             else:
                 winners_name = player2_name
                 winners_character = character2
@@ -261,9 +263,10 @@ def start_fighting(player1_name, player2_name, selected_background, character1, 
                 medium_at = fighter2.attacks_were_made[1]
                 heavy_at = fighter2.attacks_were_made[2]
                 low_at = fighter2.attacks_were_made[3]
+                show_end_window = True
 
         if timer.seconds == seconds_before_quit:
             running = False
 
     pygame.mixer.music.stop()
-    return winners_name, winners_character, winners_time, heavy_at, medium_at, weak_at, low_at
+    return show_end_window, winners_name, winners_character, winners_time, heavy_at, medium_at, weak_at, low_at

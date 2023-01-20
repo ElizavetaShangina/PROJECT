@@ -88,7 +88,7 @@ Rukia_offsets = [
 ]
 Rukia_scale = 2.16
 Rukia_cycled_frames = [1, 1, 2]
-Rukia_characteristics = [1, 2, 4, 3]
-Rukia_speed = 7
+Rukia_characteristics = [1, 4, 4, 7]
+Rukia_speed = 5
 Rukia_data = [Rukia_frame_width, Rukia_frame_height, Rukia_animations_steps, Rukia_cycled_frames, Rukia_offsets,
               Rukia_scale, Rukia_characteristics, Rukia_speed]
